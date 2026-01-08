@@ -4,6 +4,7 @@ import com.example.orderplatform.order.application.port.out.OrderRepositoryPort;
 import com.example.orderplatform.order.domain.model.Order;
 import com.example.orderplatform.order.infrastructure.mapper.OrderPersistenceMapper;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,5 +27,12 @@ public class OrderRepositoryAdapter implements OrderRepositoryPort {
     public Optional<Order> findById(UUID orderId) {
         return jpaRepository.findById(orderId)
                 .map(OrderPersistenceMapper::toDomain);
+    }
+
+    @Override
+    public List<Order> findAll() {
+        return jpaRepository.findAll().stream()
+                .map(OrderPersistenceMapper::toDomain)
+                .toList();
     }
 }
