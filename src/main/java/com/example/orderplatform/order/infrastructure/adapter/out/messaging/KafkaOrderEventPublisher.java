@@ -9,7 +9,6 @@ public class KafkaOrderEventPublisher implements OrderEventPublisherPort {
 
     @Override
     public void publishOrderCreated(Order order) {
-        // Lógica Kafka aquí
         System.out.println("Kafka event: OrderCreated -> " + order.getId());
     }
 
