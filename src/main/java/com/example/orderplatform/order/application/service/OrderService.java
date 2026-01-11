@@ -12,6 +12,9 @@ import com.example.orderplatform.order.domain.model.Order;
 import com.example.orderplatform.order.domain.model.OrderItem;
 import com.example.orderplatform.order.domain.status.Created;
 import com.example.orderplatform.order.domain.status.Rejected;
+import com.example.orderplatform.order.infrastructure.adapter.out.messaging.KafkaOrderEventPublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -22,6 +25,7 @@ import java.util.UUID;
 @Service
 public class OrderService implements CreateOrderUseCase, ApproveOrderUseCase, GetOrderByIdUseCase, GetAllOrdersUseCase {
 
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
     private final OrderRepositoryPort orderRepository;
     private final OrderEventPublisherPort eventPublisher;
     private final Clock clock;
@@ -49,6 +53,7 @@ public class OrderService implements CreateOrderUseCase, ApproveOrderUseCase, Ge
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
 
         if (!(order.getStatus() instanceof Created)) {
+            log.error("Order status is not created");
             throw new OrderCannotBeApprovedException(
                     "Only CREATED orders can be approved. Current status: " + order.getStatus().getClass().getSimpleName()
             );
